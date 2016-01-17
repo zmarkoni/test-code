@@ -8,10 +8,10 @@
 var testModule = require('./script/modules/test/test.js');
 
 // test('Hi Zoran Markovic');
-console.log(testModule.greetings);
-testModule.setName("Jelena");
-testModule.getName();
-testModule.updatePlaceholder('Hello from testModule !!!!!!!!!!!!!!!!')
+//console.log(testModule.greetings);
+//testModule.setName("Jelena");
+//testModule.getName();
+//testModule.updatePlaceholder('Hello from testModule !!!!!!!!!!!!!!!!')
 
 //console.log('javascript reporting in from app.js ...');
 
@@ -39,9 +39,9 @@ Person2.prototype.showPerson2 = function() {
 
 var p2 = new Person2("Jelena", 29);
 //p2.showPerson2();
-
+//############################################################
 //inheritance
-
+//############################################################
 function Person3(lastName, name, age) {
   Person2.call(this, name, age); // inherit from Person2
   this.lastName = lastName;
@@ -70,8 +70,9 @@ var p3 = new Person3("Markovic", "Slobodan", 55);
 // (function() {
 //   console.log("It works");
 // })();
-
+//############################################################
 //method invocation pattern
+//############################################################
 var myObject = {
   value: 0,
   increment: function(inc) {
@@ -87,10 +88,12 @@ var myObject = {
 // myObject.increment(55);
 // console.log(myObject.value); //rezultat je: 55
 
+//############################################################
 //function invocation pattern
-myObject.double = function(){
+//############################################################
+myObject.double = function() {
   var that = this;
-  var helper = function () {
+  var helper = function() {
     var result = myObject.increment(that.value, that.value);
     console.log("Double is: " + result);
   }
@@ -99,3 +102,131 @@ myObject.double = function(){
 
 // Invoke double as a method.
 //myObject.double();
+//#############################################################
+//Test the scope
+//###############################################################
+function scopeTest(count) {
+  for (var i = 0; i < count; i++) {
+    console.log("count " + i);
+  }
+  // i = 10;
+  console.log("final count is: " + i); //10
+}
+//scopeTest(3);
+
+test2 = "global_zoran";
+(function() {
+  test2 = "private_zoran";
+
+  function privateTest() {
+    var test2 = "private_zoran123";
+    console.log("form function privateScope: " + test2);
+  }
+
+  //privateTest();
+  //console.log("privateScope: " + test2);
+})();
+//console.log("GlobalScope: " + test2);
+//##########################################################################
+//Ako funkcija i promenljiva imaju isto ime, onda funkcija overajduje ime promenljive
+//##################################################################################
+
+myName = "Zoran"; // ili var myName="Zoran"; isto overajduje
+function myName() { // ne overajduje varijablu
+  console.log("from function: " + myName);
+}
+//console.log(typeof myName);
+//########################################
+var myLastName;
+
+function myLastName() { // overajduje varijablu
+  console.log("from function: " + myLastName);
+}
+//console.log(typeof myLastName);
+//########################################
+var age = 33;
+age = function() { // overajduje varijablu u svakom slucaju
+    console.log("from function: " + age);
+  }
+  //console.log(typeof age);
+
+//Variable hoisting
+function myDog() {
+  var name = "Tina";
+  console.log(name + " says woof woof!");
+
+}
+///myDog();
+
+//Function public scope
+
+// (function(){
+//   function countNumbers(count) {
+//     for( var i=0; i<count; i++) {
+//       console.log("count numbers: " + i);
+//     }
+//     var i = 10;
+//     console.log("max count is: " + i); //10
+//   }
+//   countNumbers(2); //0,1
+//   console.log("i outside the function: " + i); // i is not defined
+// })();
+//console.log("i outside the anonymus function: " + i); // i is not defined
+
+//create privileged methods with constructor(this) - it is clouser
+function myFuncton() {
+  var name = "Zoran";
+
+  function addName(value) {
+    name = value;
+  }
+
+  //privileged method = clouser
+  this.updateName = function(value) {
+    return addName(value);
+  }
+
+  this.showName = function() {
+    console.log(name);
+  }
+}
+// var z = new myFuncton();
+// z.updateName("Jelena");
+// z.showName();
+
+
+//create privileged methods with function expressions
+var Person = (function() {
+
+  var name = "";
+  var lastName = "";
+  var age = 0;
+  function createPerson(name, lastName, age) {
+    this.name = name;
+    this.lastName = lastName;
+    this.age = age;
+  }
+
+  function showPerson() {
+    console.log("person: " + this.name + " " + this.lastName);
+    return showAge(this.age);
+  }
+
+  function showAge(age){
+    console.log("Age of preson:" + age);
+  }
+
+  return {
+    createPerson: createPerson,
+    showPerson: showPerson,
+  };
+
+})();
+
+var z = Person;
+z.createPerson("Zoran","Markovic", 32);
+z.showPerson();
+
+//#############################################################
+//create public methods - closure
+//##############################################################
